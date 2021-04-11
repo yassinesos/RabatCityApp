@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,10 +14,15 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.iao.android.rabatcityapp.adapters.RecyclerAdapter;
+import com.iao.android.rabatcityapp.models.Hotel;
+import com.iao.android.rabatcityapp.services.ApiClient;
+import com.iao.android.rabatcityapp.services.ApiService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +36,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
     CardView cardView, cardView2, cardView3;
     ImageView imageView;
@@ -41,10 +49,12 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private List<Object> viewItems = new ArrayList<>();
+    private List<Hotel> hotelLists;
 
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-
+    private ProgressBar progressBar;
+    private boolean coonected = true;
     private static final String TAG = "MainActivity";
 
 
@@ -53,19 +63,45 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        progressBar = findViewById(R.id.idPBLoading);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
 
-        // specify an adapter (see also next example)
-        mAdapter = new RecyclerAdapter(this, viewItems);
-        mRecyclerView.setAdapter(mAdapter);
 
-        addItemsFromJSON();
+        //intialization of retrofit apiclient
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        Call<List<Hotel>> call = apiService.getHotels();
+        call.enqueue(new Callback<List<Hotel>>() {
+            @Override
+            public void onResponse(Call<List<Hotel>> call, Response<List<Hotel>> response) {
+                if (response.isSuccessful()) {
+                    progressBar.setVisibility(View.GONE);
+                    hotelLists = response.body();
+                    for (int i = 0; i < hotelLists.size(); i++) {
+                        mAdapter = new RecyclerAdapter(MainActivity.this, hotelLists);
+
+                        // below line is to set layout manager for our recycler view.
+                        layoutManager = new LinearLayoutManager(MainActivity.this);
+
+                        // setting layout manager for our recycler view.
+                        mRecyclerView.setLayoutManager(layoutManager);
+
+                        // below line is to set adapter to our recycler view.
+                        mRecyclerView.setAdapter(mAdapter);
+                    }
+                    Log.d("TAG", "Response = " + hotelLists);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Hotel>> call, Throwable t) {
+                Log.d("TAG","Response = "+t.toString());
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext() , "Check your internet", Toast.LENGTH_LONG).show();
+            }
+        });
 
 //        textView5 = findViewById(R.id.textView4);
          searchView = findViewById(R.id.searchView);
@@ -93,49 +129,5 @@ public class MainActivity extends AppCompatActivity {
         );
    }
 
-    private void addItemsFromJSON() {
-        try {
 
-            String jsonDataString = readJSONDataFromFile();
-            JSONArray jsonArray = new JSONArray(jsonDataString);
-
-            for (int i=0; i<jsonArray.length(); ++i) {
-
-                JSONObject itemObj = jsonArray.getJSONObject(i);
-
-                String name = itemObj.getString("name");
-                String date = itemObj.getString("date");
-
-                Holidays holidays = new Holidays(name, date);
-                viewItems.add(holidays);
-            }
-
-        } catch (JSONException | IOException e) {
-            Log.d(TAG, "addItemsFromJSON: ", e);
-        }
-    }
-
-    private String readJSONDataFromFile() throws IOException{
-
-        InputStream inputStream = null;
-        StringBuilder builder = new StringBuilder();
-
-        try {
-
-            String jsonString = null;
-            inputStream = getResources().openRawResource(R.raw.holidays);
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(inputStream, "UTF-8"));
-
-            while ((jsonString = bufferedReader.readLine()) != null) {
-                builder.append(jsonString);
-            }
-
-        } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
-        }
-        return new String(builder);
-    }
 }

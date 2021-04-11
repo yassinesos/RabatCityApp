@@ -5,4 +5,13 @@
     <color name="colorAccent">#ECC131</color>
     <color name="white1">#ffffff</color>
     <color name="blue1">#469FEC</color>
+    <color name="colorTextWhite">#ffffff</color>
+    <color name="colorTextBlack">#000000</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorEditText">#14000000</color>
+    <color name="colorButton">#0E68FF</color>
+    <color name="colorButtonText">#ffffff</color>
+    <color name="colorPlaceholder">#505050</color>
+    <color name="colorTextPrimary">#0E68FF</color>
+    <color name="colorPrimary2">#0E68FF</color>
 </resources>
