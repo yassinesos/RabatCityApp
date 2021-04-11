@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         // use a linear layout manager
 
 
-        //intialization of retrofit apiclient
+        //intialization of retrofit Apiclient
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
         Call<List<Hotel>> call = apiService.getHotels();
         call.enqueue(new Callback<List<Hotel>>() {
