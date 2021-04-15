@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "346977551429",
+    "project_id": "rabatcity-33ef8",
+    "storage_bucket": "rabatcity-33ef8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346977551429:android:482f96ef64af2a4cc28f2c",
+        "android_client_info": {
+          "package_name": "com.iao.android.rabatcityapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "346977551429-25g64m217oak4a1vignuqdt06pkc5apq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLSVveeHYkb2U0tdluFXlN7OwTz28T0X8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "346977551429-25g64m217oak4a1vignuqdt06pkc5apq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

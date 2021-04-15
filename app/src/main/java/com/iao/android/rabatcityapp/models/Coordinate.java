@@ -3,7 +3,9 @@ package com.iao.android.rabatcityapp.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Coordinate {
+import java.io.Serializable;
+
+public class Coordinate implements Serializable {
     @SerializedName("lat")
     @Expose
     private double lat;

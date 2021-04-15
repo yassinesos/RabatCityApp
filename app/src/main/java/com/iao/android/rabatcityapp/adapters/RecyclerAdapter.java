@@ -16,7 +16,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.iao.android.rabatcityapp.Holidays;
 import com.iao.android.rabatcityapp.R;
 import com.iao.android.rabatcityapp.SecondActivity;
 import com.iao.android.rabatcityapp.models.Hotel;
@@ -41,6 +40,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
         private TextView date;
         private CardView cardview;
         private Animation anim_from_button;
+        private Intent secondActivity;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -52,8 +52,8 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
             cardview = itemView.findViewById(R.id.cardView);
             anim_from_button = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.anim_from_bottom);
             cardview.setAnimation(anim_from_button);
+             secondActivity = new Intent(cardview.getContext(), SecondActivity.class);
             cardview.setOnClickListener(view -> {
-                Intent secondActivity = new Intent(view.getContext(), SecondActivity.class);
                 view.getContext().startActivity(secondActivity);
             });
         }
@@ -84,15 +84,23 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
             default:
 
                 ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
+
                 Hotel hotel = (Hotel) listRecyclerItem.get(position);
-                itemViewHolder.name.setText(hotel.getName());
-                itemViewHolder.ratingBar.setRating(hotel.getStarRating());
-                itemViewHolder.ratingText.setText(String.valueOf(hotel.getStarRating()));
+                String name = hotel.getName();
+                float starRating = hotel.getStarRating();
+                String startRatingText = String.valueOf(hotel.getStarRating());
+                String Image = hotel.getPhotos().get(0);
+
+                itemViewHolder.name.setText(name);
+                itemViewHolder.ratingBar.setRating(starRating);
+                itemViewHolder.ratingText.setText(startRatingText);
                 Glide.with(itemViewHolder.imageView.getContext())
-                        .load(hotel.getPhotos().get(0))
+                        .load(Image)
                         .centerCrop()
                         .placeholder(R.drawable.image_one)
                         .into(itemViewHolder.imageView);
+                //adding informations needed for the second activity
+                itemViewHolder.secondActivity.putExtra("hotel",hotel);
         }
     }
 

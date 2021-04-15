@@ -1,5 +1,6 @@
 package com.iao.android.rabatcityapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,11 +14,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 public class LoginActivity extends AppCompatActivity {
     EditText email;
     EditText password;
     TextView register;
     Button login;
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,17 +84,50 @@ public class LoginActivity extends AppCompatActivity {
         if (isValid) {
             String usernameValue = email.getText().toString();
             String passwordValue = password.getText().toString();
-            if (usernameValue.equals("test@test.com") && passwordValue.equals("password1234")) {
-                //everything checked we open new activity
-                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(i);
-                //we close this activity
-                this.finish();
-            } else {
-                Toast t = Toast.makeText(this, "Wrong email or password!", Toast.LENGTH_SHORT);
-                t.show();
-            }
+            mAuth = FirebaseAuth.getInstance();
+            mAuth.signInWithEmailAndPassword(usernameValue, passwordValue)
+                    .addOnCompleteListener(
+                            new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(
+                                        @NonNull Task<AuthResult> task)
+                                {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getApplicationContext(),
+                                                "Login successful !",
+                                                Toast.LENGTH_LONG)
+                                                .show();
+
+                                        // hide the progress bar
+
+
+                                        // if sign-in is successful
+                                        // intent to home acti
+                                        Intent intent= new Intent(LoginActivity.this,
+                                                MainActivity.class);
+                                        startActivity(intent);
+                                    }
+
+                                    else {
+
+                                        // sign-in failed
+                                        Toast.makeText(getApplicationContext(),
+                                                "Login failed !",
+                                                Toast.LENGTH_LONG)
+                                                .show();
+
+                                        // hide the progress bar
+                                    }
+                                }
+                            });
+
+            //we close this activity
+            this.finish();
+        } else {
+            Toast t = Toast.makeText(this, "Wrong email or password!", Toast.LENGTH_SHORT);
+            t.show();
         }
+
     }
 
     boolean isEmail(EditText text) {

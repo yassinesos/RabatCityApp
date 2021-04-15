@@ -24,16 +24,8 @@ import com.iao.android.rabatcityapp.models.Hotel;
 import com.iao.android.rabatcityapp.services.ApiClient;
 import com.iao.android.rabatcityapp.services.ApiService;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,20 +33,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    CardView cardView, cardView2, cardView3;
-    ImageView imageView;
-    TextView textView, textView2, textView3, textView4, textView5;
+
     SearchView searchView;
-    Animation anim_from_button, anim_from_top, anim_from_left;
+    Animation  anim_from_left;
 
     private RecyclerView mRecyclerView;
-    private List<Object> viewItems = new ArrayList<>();
     private List<Hotel> hotelLists;
 
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ProgressBar progressBar;
-    private boolean coonected = true;
     private static final String TAG = "MainActivity";
 
 

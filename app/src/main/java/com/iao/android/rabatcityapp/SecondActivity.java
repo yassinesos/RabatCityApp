@@ -15,12 +15,19 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.bumptech.glide.Glide;
+import com.iao.android.rabatcityapp.models.Hotel;
 
 public class SecondActivity extends AppCompatActivity {
     ImageView second_back_arrow, second_arrow_up;
     TextView second_title, second_subtitle, second_rating_number, second_rating_number2, more_details;
     RatingBar second_ratingbar;
     Animation from_left, from_right, from_bottom;
+    ImageView imageLayout;
+    Intent i;
+    Hotel hotel;
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +41,22 @@ public class SecondActivity extends AppCompatActivity {
         second_rating_number2 = findViewById(R.id.second_rating_number2);
         more_details = findViewById(R.id.more_details);
         second_ratingbar = findViewById(R.id.second_ratingbar);
+        imageLayout = findViewById(R.id.imageViewSecondActivity);
+        // add data received from main activity
+         i = getIntent();
+         hotel =(Hotel)i.getSerializableExtra("hotel");
+
+        second_title.setText(hotel.getName());
+        second_subtitle.setText(hotel.getAbout());
+        second_ratingbar.setRating(hotel.getStarRating());
+        second_rating_number.setText(String.valueOf(hotel.getStarRating()));
+
+        Glide.with(imageLayout.getContext())
+                .load(hotel.getPhotos().get(0))
+                .centerCrop()
+                .placeholder(R.drawable.background)
+                .into(imageLayout);
+
         second_back_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,6 +98,7 @@ public class SecondActivity extends AppCompatActivity {
                 Pair[] pairs = new Pair[1];
                 pairs[0] = new Pair<View, String>(second_arrow_up, "background_image_transition");
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SecondActivity.this, pairs);
+                intent.putExtra("hotelActi3",hotel);
                 startActivity(intent, options.toBundle());
             }
         });
