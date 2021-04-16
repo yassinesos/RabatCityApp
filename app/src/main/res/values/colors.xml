@@ -14,4 +14,6 @@
     <color name="colorPlaceholder">#505050</color>
     <color name="colorTextPrimary">#0E68FF</color>
     <color name="colorPrimary2">#0E68FF</color>
+    <color name="dollarColor">#85bb65</color>
+
 </resources>

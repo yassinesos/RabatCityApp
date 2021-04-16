@@ -7,7 +7,7 @@ import com.iao.android.rabatcityapp.models.Coordinate;
 import java.io.Serializable;
 import java.util.List;
 
-public class Hotel implements Serializable {
+public class Hotel implements Serializable, modelInterface {
     @SerializedName("id")
     @Expose
     private int id;

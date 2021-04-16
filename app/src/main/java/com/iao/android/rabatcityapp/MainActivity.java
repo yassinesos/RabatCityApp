@@ -40,11 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private List<Hotel> hotelLists;
 
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ProgressBar progressBar;
     private static final String TAG = "MainActivity";
-
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -91,8 +90,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        textView5 = findViewById(R.id.textView4);
+        // utilisation de searchView pour le filtrage
          searchView = findViewById(R.id.searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
         //Load Animations
 //        anim_from_button = AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom);
 //        anim_from_top = AnimationUtils.loadAnimation(this, R.anim.anim_from_top);

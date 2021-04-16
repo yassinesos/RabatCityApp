@@ -60,6 +60,7 @@
         android:alpha="0.5"
         android:fontFamily="@font/open_sans_regular"
         android:text="Top of the World is known as one of the most romantic restaurants in the city. It offers an intimate dining setting paired with an extravagant view of the entire city, all encompassed in 360-degree ..."
+        android:scrollbars = "vertical"
         android:textColor="@color/white1"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"

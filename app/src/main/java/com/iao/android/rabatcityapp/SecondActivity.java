@@ -4,6 +4,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
@@ -48,6 +49,7 @@ public class SecondActivity extends AppCompatActivity {
 
         second_title.setText(hotel.getName());
         second_subtitle.setText(hotel.getAbout());
+        second_subtitle.setMovementMethod(new ScrollingMovementMethod());
         second_ratingbar.setRating(hotel.getStarRating());
         second_rating_number.setText(String.valueOf(hotel.getStarRating()));
 
