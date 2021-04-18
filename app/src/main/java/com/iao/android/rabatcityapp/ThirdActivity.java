@@ -1,10 +1,15 @@
 package com.iao.android.rabatcityapp;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Pair;
@@ -12,12 +17,18 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.iao.android.rabatcityapp.models.Hotel;
 
 public class ThirdActivity extends AppCompatActivity {
@@ -26,8 +37,12 @@ public class ThirdActivity extends AppCompatActivity {
     Animation from_bottom;
     TextView thirdTitle, thirdRatingNumber,aboutText;
     RatingBar thirdRattingbar;
-    Intent i;
+    Intent i,mapIntent;
     Hotel hotel;
+    Button roadmap_button;
+    FusedLocationProviderClient client;
+    SupportMapFragment mapFragment;
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +71,15 @@ public class ThirdActivity extends AppCompatActivity {
                 .placeholder(R.drawable.header_background)
                 .into(headerImage);
 
+        roadmap_button = findViewById(R.id.roadmap_button);
+        client = LocationServices.getFusedLocationProviderClient(this);
+        //Check permission
+        roadmap_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapLocation();
+            }
+        });
         from_bottom = AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom);
         down_arrow.setAnimation(from_bottom);
         third_scrollview.setAnimation(from_bottom);
@@ -84,5 +108,42 @@ public class ThirdActivity extends AppCompatActivity {
                 startActivity(intent, options.toBundle());
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == 44 ){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                mapLocation();
+            }
+        }
+    }
+
+    public void mapLocation(){
+        if(ActivityCompat.checkSelfPermission(ThirdActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            //when granted
+            Task<Location> task = client.getLastLocation();
+            task.addOnSuccessListener(new OnSuccessListener<Location>() {
+                                          @Override
+                                          public void onSuccess(Location location) {
+                                                if( location != null){
+                                                    mapIntent = new Intent(ThirdActivity.this, MapsActivity.class);
+                                                    mapIntent.putExtra("hotelMap", hotel);
+                                                    Double lat = location.getLatitude();
+                                                    Double lon = location.getLongitude();
+
+                                                    mapIntent.putExtra("lat", lat);
+                                                    mapIntent.putExtra("lon", lon);
+                                                    startActivity(mapIntent);
+                                                }
+                                          }
+                                      }
+            );
+
+        }else{
+            ActivityCompat.requestPermissions(ThirdActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+        }
     }
 }

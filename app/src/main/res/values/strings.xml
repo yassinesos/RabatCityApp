@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RabatCity</string>
+    <string name="title_activity_maps">Rabat City Map</string>
 </resources>
