@@ -25,4 +25,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="popupMenuStyle" parent="@android:style/Widget.PopupMenu">
+        <item name="android:itemPadding">25dp</item>
+        <item name="android:listPreferredItemHeightSmall">50dp</item>
+    </style>
+
+
 </resources>

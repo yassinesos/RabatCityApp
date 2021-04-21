@@ -9,11 +9,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -24,8 +29,9 @@ public class LoginActivity extends AppCompatActivity {
     EditText password;
     TextView register;
     Button login;
+    ImageView background;
     private FirebaseAuth mAuth;
-
+    RelativeLayout relativeLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +41,15 @@ public class LoginActivity extends AppCompatActivity {
         password=(EditText) findViewById(R.id.password_sign_up);
         register = (TextView) findViewById(R.id.gotoregister);
         login = (Button) findViewById(R.id.sign_in);
+        background = findViewById(R.id.loginBackground);
+        Glide.with(background.getContext())
+                .load(R.drawable.hassanblack)
+                .centerCrop()
+                .into(background);
+        Animation anim_from_button = AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom);
+        relativeLayout = findViewById(R.id.loginLayout);
+        relativeLayout.setAnimation(anim_from_button);
+
         setupListeners();
     }
 

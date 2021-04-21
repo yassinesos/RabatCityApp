@@ -9,11 +9,14 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -36,14 +39,14 @@ public class MainActivity extends AppCompatActivity {
 
     SearchView searchView;
     Animation  anim_from_left;
-
+    ImageView popupImage;
     private RecyclerView mRecyclerView;
     private List<Hotel> hotelLists;
 
     private RecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ProgressBar progressBar;
-    private static final String TAG = "MainActivity";
+
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -78,13 +81,11 @@ public class MainActivity extends AppCompatActivity {
                         // below line is to set adapter to our recycler view.
                         mRecyclerView.setAdapter(mAdapter);
                     }
-                    Log.d("TAG", "Response = " + hotelLists);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Hotel>> call, Throwable t) {
-                Log.d("TAG","Response = "+t.toString());
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext() , "Check your internet", Toast.LENGTH_LONG).show();
             }
@@ -105,13 +106,13 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        // popup menu pour le logout
+        popupMenu();
         //Load Animations
-//        anim_from_button = AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom);
-//        anim_from_top = AnimationUtils.loadAnimation(this, R.anim.anim_from_top);
          anim_from_left = AnimationUtils.loadAnimation(this, R.anim.anim_from_left);
         //Set Animations
-//        textView5.setAnimation(anim_from_top);
-          searchView.setAnimation(anim_from_left);
+         searchView.setAnimation(anim_from_left);
 
 
         //Hide status bar and navigation bar at the bottom
@@ -128,6 +129,29 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
    }
+
+    private void popupMenu() {
+        popupImage = findViewById(R.id.dotsMenu);
+        popupImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup = new PopupMenu(MainActivity.this, v, Gravity.RIGHT);
+                popup.inflate(R.menu.popup_menu);
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if( item.getItemId() == R.id.logout){
+                            //logout code
+                            Toast.makeText(getApplicationContext() , "logout!", Toast.LENGTH_LONG).show();
+
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+            }
+        });
+    }
 
 
 }

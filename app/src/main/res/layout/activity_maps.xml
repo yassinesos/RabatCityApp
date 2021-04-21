@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MapsActivity" >
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,4 +11,20 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity" />
+    />
+    <Button
+        android:id="@+id/directions_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/custom_button"
+        android:drawableEnd="@drawable/ic_directions"
+        android:drawableRight="@drawable/ic_directions"
+        android:fontFamily="@font/open_sans_extra_bold"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:text="N A V I G A T I O N "
+        android:textColor="@color/white1"
+        android:textSize="18sp" />
+</FrameLayout>

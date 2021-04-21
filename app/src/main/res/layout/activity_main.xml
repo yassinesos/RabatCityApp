@@ -23,17 +23,20 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="341dp"
         app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/firstText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/open_sans_extra_bold"
         android:text="Rabat"
         android:textColor="@color/colorPrimary"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -46,29 +49,39 @@
         app:layout_constraintStart_toEndOf="@+id/firstText"
         app:layout_constraintTop_toTopOf="@+id/firstText"
         android:layout_marginLeft="8dp" />
+
+    <ImageView
+        android:id="@+id/dotsMenu"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_more_vert_black"
+        app:layout_constraintEnd_toStartOf="@id/guideline2"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="51dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        app:layout_constraintEnd_toStartOf="@id/guideline2"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_settings"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"
+        android:src="@drawable/ic_settings"
+        app:layout_constraintEnd_toStartOf="@+id/dotsMenu"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <SearchView
         android:id="@+id/searchView"
         android:layout_width="0dp"
         android:layout_height="55dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="60dp"
         android:background="@drawable/custom_search_view"
         android:elevation="20dp"
         android:queryHint="Search here..."
         app:layout_constraintEnd_toStartOf="@id/guideline2"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/guideline"
         app:layout_constraintTop_toBottomOf="@id/textView"
-        tools:targetApi="lollipop"/>
+        tools:targetApi="lollipop" />
 
     <ProgressBar
         android:id="@+id/idPBLoading"
