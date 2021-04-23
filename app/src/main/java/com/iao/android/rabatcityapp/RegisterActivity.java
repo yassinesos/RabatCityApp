@@ -1,68 +1,158 @@
 package com.iao.android.rabatcityapp;
 
-import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class RegisterActivity  extends AppCompatActivity implements View.OnClickListener {
-    ImageView background;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
+public class RegisterActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore firestore;
+    EditText user;
+    EditText email;
+    Button register;
+    EditText password;
+    EditText passwordConfirmation;
+    String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        background = findViewById(R.id.registerBackground);
-        Glide.with(background.getContext())
-                .load(R.drawable.hassan)
-                .centerCrop()
-                .into(background);
-        TextView next = (TextView) findViewById(R.id.gotologin);
-        next.setOnClickListener(this);
 
-        Button sign_in = (Button) findViewById(R.id.sign_up);
-        sign_in.setOnClickListener(this);
+        user = findViewById(R.id.user);
+        email = findViewById(R.id.email2);
+        password = findViewById(R.id.password2);
+        passwordConfirmation = findViewById(R.id.confirm_password2);
+        register = findViewById(R.id.sign_up);
 
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkDataEntered();
+            }
+        });
     }
 
+    boolean isEmail(EditText text) {
+        CharSequence email = text.getText().toString();
+        return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
 
-    @Override
-    public void onClick(View view) {
-        int viewId = view.getId();
-         EditText email2 = (EditText) findViewById(R.id.email2);
-         EditText user = (EditText) findViewById(R.id.user);
-         EditText password2 = (EditText) findViewById(R.id.password2);
-         EditText confirm = (EditText) findViewById(R.id.confirm_password2);
-        if(viewId == R.id.sign_up){
+    boolean isEmpty(EditText text) {
+        CharSequence str = text.getText().toString();
+        return TextUtils.isEmpty(str);
+    }
 
-            if (email2.getText().equals("") || password2.getText().equals("")
-                    || user.getText().equals("") || confirm.getText().equals("")) {
-                Toast.makeText(getApplicationContext(), "entrer tout les " +
-                        "champs", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (password2.getText().equals(confirm.getText()) == false) {
-                Toast.makeText(getApplicationContext(), "les deux mots de passes " +
-                        "sont pas identiques", Toast.LENGTH_SHORT).show();
-                confirm.setError("les deux mots de passes sont pas identiques");
-                return;
-            }
-                Intent myIntent2 = new Intent(view.getContext(), LoginActivity.class);
-                startActivity(myIntent2);
-            return;
+    void checkDataEntered() {
+        boolean isValid = true;
+        if (isEmpty(user)) {
+            Toast t = Toast.makeText(this, "You must enter first name to register!", Toast.LENGTH_SHORT);
+            t.show();
+            user.setError("User name is required!");
+            isValid = false;
         }
-        else if(viewId == R.id.gotoregister){
-            Intent myIntent = new Intent(view.getContext(), LoginActivity.class);
-            startActivity(myIntent);
-            return;
-        } else{return;}
+
+        if (isEmail(email) == false) {
+            email.setError("Enter valid email!");
+            isValid = false;
+
+        }
+
+        if(isEmpty(password)){
+            password.setError("Password is required!");
+            isValid = false;
+        }else {
+            if (password.getText().toString().length() < 4) {
+                password.setError("Password must be at least 4 chars long!");
+                isValid = false;
+            }
+        }
+
+        if(isEmpty(passwordConfirmation)){
+            password.setError("Please confirm your password!");
+            isValid = false;
+        }
+
+        if (! password.getText().toString().equals(passwordConfirmation.getText().toString())) {
+            passwordConfirmation.setError("Check your password !");
+            isValid = false;
+        }
+
+        if (isValid) {
+            String userValue = user.getText().toString();
+            String passwordValue = password.getText().toString();
+            String emailValue = email.getText().toString();
+
+            mAuth = FirebaseAuth.getInstance();
+            firestore = FirebaseFirestore.getInstance();
+            mAuth.createUserWithEmailAndPassword(emailValue, passwordValue)
+                    .addOnCompleteListener(
+                            task -> {
+                                if (task.isSuccessful()) {
+                                    userId = mAuth.getCurrentUser().getUid();
+                                    DocumentReference newUser = firestore.collection("users").document(userId);
+                                    Map<String, String> userMap = new HashMap<String, String>() {};
+                                    userMap.put("userName",userValue);
+                                    userMap.put("email",emailValue);
+
+                                    newUser.set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                Intent myCallerIntent = getIntent();
+
+                                                Bundle myBundle = new Bundle();
+                                                myBundle.putString("email", emailValue );
+                                                myBundle.putString("password", passwordValue );
+                                                myCallerIntent.putExtras(myBundle);
+                                                setResult(Activity.RESULT_OK,
+                                                        myCallerIntent);
+
+                                                Toast.makeText(getApplicationContext(),
+                                                        "Account created !",
+                                                        Toast.LENGTH_LONG)
+                                                        .show();
+                                                finish();
+
+                                            }else{
+                                                Toast.makeText(getApplicationContext(),
+                                                        "Error while creating Account !",
+                                                        Toast.LENGTH_LONG)
+                                                        .show();
+                                            }
+                                        }
+                                    });
+
+                                }
+                            });
+
+            //we close this activity
+            this.finish();
+        } else {
+            Toast t = Toast.makeText(this, "Information are Invalide !", Toast.LENGTH_SHORT);
+            t.show();
+        }
 
     }
 

@@ -83,6 +83,16 @@ public class ThirdActivity extends AppCompatActivity {
         from_bottom = AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom);
         down_arrow.setAnimation(from_bottom);
         third_scrollview.setAnimation(from_bottom);
+
+        // more comments
+        ImageView reviews = findViewById(R.id.second_arrow_upblack);
+        reviews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ThirdActivity.this, ReviewActivity.class);
+                startActivity(intent);
+            }
+        });
         //Hide status bar and navigation bar at the bottom
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,

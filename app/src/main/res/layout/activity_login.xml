@@ -104,6 +104,7 @@
                 android:layout_marginRight="48dp"/>
 
             <CheckBox
+                android:id="@+id/rememberme"
                 android:buttonTint="@color/colorBlack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

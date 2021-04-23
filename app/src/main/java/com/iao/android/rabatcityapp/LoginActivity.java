@@ -1,9 +1,12 @@
 package com.iao.android.rabatcityapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,6 +15,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -32,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     ImageView background;
     private FirebaseAuth mAuth;
     RelativeLayout relativeLayout;
+    CheckBox rememberme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
         register = (TextView) findViewById(R.id.gotoregister);
         login = (Button) findViewById(R.id.sign_in);
         background = findViewById(R.id.loginBackground);
+        rememberme = findViewById(R.id.rememberme);
+
         Glide.with(background.getContext())
                 .load(R.drawable.hassanblack)
                 .centerCrop()
@@ -49,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         Animation anim_from_button = AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom);
         relativeLayout = findViewById(R.id.loginLayout);
         relativeLayout.setAnimation(anim_from_button);
+
 
         setupListeners();
     }
@@ -66,7 +76,35 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(i);
+                startActivityForResult(i, 101);
+            }
+        });
+
+        SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+        SharedPreferences preferences2 = getSharedPreferences("login", MODE_PRIVATE);
+
+        String checkbox = preferences.getString("remember", "");
+        String loginFirstTime = preferences2.getString("first", "");
+
+        if(checkbox.equals("true") && loginFirstTime.equals("true")){
+            Intent intent= new Intent(LoginActivity.this,
+                    MainActivity.class);
+            startActivity(intent);
+        }
+        rememberme.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(buttonView.isChecked()){
+                    SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("remember", "true");
+                    editor.apply();
+                }else{
+                    SharedPreferences preferences = getSharedPreferences("checkbox", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("remember", "false");
+                    editor.apply();
+                }
             }
         });
     }
@@ -114,8 +152,10 @@ public class LoginActivity extends AppCompatActivity {
                                                 .show();
 
                                         // hide the progress bar
-
-
+                                        SharedPreferences preferences = getSharedPreferences("login", MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = preferences.edit();
+                                        editor.putString("first", "true");
+                                        editor.apply();
                                         // if sign-in is successful
                                         // intent to home acti
                                         Intent intent= new Intent(LoginActivity.this,
@@ -136,8 +176,6 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             });
 
-            //we close this activity
-            this.finish();
         } else {
             Toast t = Toast.makeText(this, "Wrong email or password!", Toast.LENGTH_SHORT);
             t.show();
@@ -155,4 +193,28 @@ public class LoginActivity extends AppCompatActivity {
         return TextUtils.isEmpty(str);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        try {
+            if ((requestCode == 101 ) && (resultCode == Activity.RESULT_OK)) {
+                Bundle myResultBundle = data.getExtras();
+                String emailIntent = myResultBundle.getString("email");
+                String passwordIntent = myResultBundle.getString("password");
+                email.setText(emailIntent);
+                password.setText(passwordIntent);
+            }
+
+        }
+        catch (Exception e) {
+//            txtResult.setText("Problems - " + requestCode + " " + resultCode);
+            Toast.makeText(getApplicationContext(),
+                    " creation error" + resultCode + " - " + requestCode,
+                    Toast.LENGTH_LONG)
+                    .show();
+            e.getCause();
+        }
+
+    }
 }
