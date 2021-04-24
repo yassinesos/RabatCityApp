@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -39,22 +42,48 @@ public class ReviewActivity  extends AppCompatActivity {
     private EditText commentValue;
     Intent i;
     Hotel hotel;
+    Button publish;
     private ProgressBar progressBar;
     ArrayList<AppReviewItemModel> appReviewItemModel;
     private ReviewsAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    Animation from_bottom;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
+
         // initialisation de la recyclerView
         intRecyclerView();
         // initialisation des UI
         intilizeUI();
+        // init animations
+        initAnimations();
         // reterive des données depuis la base des données Firestore
         loadAppReviewsDataAndSetAdapter();
         // enregistrer des données depuis la base des données Firestore
         saveReviewFireStore();
+    }
+
+    private void initAnimations() {
+        from_bottom = AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom);
+        commentValue.setAnimation(from_bottom);
+        ratingBar_Review.setAnimation(from_bottom);
+        publish.setAnimation(from_bottom);
+        appReviewsRecyclerView.setAnimation(from_bottom);
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        );
+        this.getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        );
     }
 
     private void intRecyclerView() {
@@ -74,6 +103,8 @@ public class ReviewActivity  extends AppCompatActivity {
         tv_user_review_date = findViewById(R.id.tv_user_review);
         tv_user_review = findViewById(R.id.tv_user_review);
         commentValue = findViewById(R.id.comment);
+        publish = findViewById(R.id.publish);
+
         ratingBar_Review.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -102,7 +133,6 @@ public class ReviewActivity  extends AppCompatActivity {
     }
 
     private void saveReviewFireStore() {
-        Button publish = findViewById(R.id.publish);
         publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

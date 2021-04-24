@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.SupportMapFragment;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.iao.android.rabatcityapp.models.Hotel;
@@ -62,6 +62,7 @@ public class ThirdActivity extends AppCompatActivity {
         from_bottom = AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom);
         down_arrow.setAnimation(from_bottom);
         third_scrollview.setAnimation(from_bottom);
+        reviews.setAnimation(from_bottom);
         //Hide status bar and navigation bar at the bottom
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
@@ -87,11 +88,15 @@ public class ThirdActivity extends AppCompatActivity {
 
 
         reviews.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ThirdActivity.this, ReviewActivity.class);
+                Pair[] pairs = new Pair[1];
+                pairs[0] = new Pair<View, String>(reviews, "background_image_transition");
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ThirdActivity.this, pairs);
                 intent.putExtra("hotel",hotel);
-                startActivity(intent);
+                startActivity(intent, options.toBundle());
             }
         });
 
@@ -134,6 +139,7 @@ public class ThirdActivity extends AppCompatActivity {
         down_arrow = findViewById(R.id.down_arrow);
         third_scrollview = findViewById(R.id.third_scrillview);
         adresseText = findViewById(R.id.adresse_text);
+        venue_type_text = findViewById(R.id.venue_type_text);
         roadmap_button = findViewById(R.id.roadmap_button);
         reviews = findViewById(R.id.second_arrow_upblack);
         client = LocationServices.getFusedLocationProviderClient(this);

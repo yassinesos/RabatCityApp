@@ -42,7 +42,7 @@ public class RecyclerAdapter<T extends modelInterface> extends RecyclerView.Adap
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
-        private TextView name, ratingText, reviewNumber, price;
+        private TextView name, ratingText, type, price, addresse;
         private RatingBar ratingBar;
         private TextView date;
         private CardView cardview;
@@ -55,6 +55,8 @@ public class RecyclerAdapter<T extends modelInterface> extends RecyclerView.Adap
             ratingBar = (RatingBar) itemView.findViewById(R.id.ratingBar);
             ratingText = (TextView) itemView.findViewById(R.id.ratingText);
             //reviewNumber = (TextView) itemView.findViewById(R.id.reviewNumber);
+//            type = itemView.findViewById(R.id.venue_type_text);
+//            addresse = itemView.findViewById(R.id.adresse_text);
             imageView = (ImageView) itemView.findViewById(R.id.view);
             price = itemView.findViewById(R.id.price);
             cardview = itemView.findViewById(R.id.cardView);
@@ -101,7 +103,6 @@ public class RecyclerAdapter<T extends modelInterface> extends RecyclerView.Adap
                 itemViewHolder.name.setText(name);
                 itemViewHolder.ratingBar.setRating(starRating);
                 itemViewHolder.ratingText.setText(startRatingText);
-
                 itemViewHolder.price.setText(item.getPrice());
                 Glide.with(itemViewHolder.imageView.getContext())
                         .load(Image)
@@ -123,6 +124,10 @@ public class RecyclerAdapter<T extends modelInterface> extends RecyclerView.Adap
         return filter;
     }
 
+    public Filter getFilterChip() {
+        return filterChip;
+    }
+
     private Filter filter = new Filter(){
 
         @Override
@@ -135,7 +140,7 @@ public class RecyclerAdapter<T extends modelInterface> extends RecyclerView.Adap
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for (T item : listRecyclerItemFull) {
-                    if (item.getName().toLowerCase().contains(filterPattern) || item.getAbout().toLowerCase().contains(filterPattern)) {
+                    if (item.getName().toLowerCase().contains(filterPattern) || item.getAbout().toLowerCase().contains(filterPattern) || item.getType().toLowerCase().contains(filterPattern)) {
                         filteredList.add(item);
                     }
                 }
@@ -143,6 +148,42 @@ public class RecyclerAdapter<T extends modelInterface> extends RecyclerView.Adap
 
             FilterResults results = new FilterResults();
             results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            listRecyclerItem.clear();
+            listRecyclerItem.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+    private Filter filterChip = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<T> filteredChipList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredChipList.addAll(listRecyclerItemFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (T item : listRecyclerItemFull) {
+                    if(filterPattern.equals("hotels")){
+                    if (item.getType().toLowerCase().equals("hotel")) {
+                        filteredChipList.add(item);
+                    }
+                    }else if(filterPattern.equals("restaurants")){
+                            if (item.getType().toLowerCase().equals("resturant")) {
+                            filteredChipList.add(item);
+                        }
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredChipList;
 
             return results;
         }

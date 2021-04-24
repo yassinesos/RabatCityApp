@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     RelativeLayout relativeLayout;
     CheckBox rememberme;
-    String userId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

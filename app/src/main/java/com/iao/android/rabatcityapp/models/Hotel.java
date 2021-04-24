@@ -144,4 +144,5 @@ public class Hotel implements Serializable, modelInterface {
     public String getType() {
         return type;
     }
+    public void setType(String type){ this.type = type; }
 }

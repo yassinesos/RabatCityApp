@@ -9,18 +9,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.transition.TransitionManager;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.iao.android.rabatcityapp.adapters.RecyclerAdapter;
 import com.iao.android.rabatcityapp.models.Hotel;
 import com.iao.android.rabatcityapp.models.modelInterface;
@@ -46,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ProgressBar progressBar;
-
-
+    private Chip hotelChip, resturantChip;
+    private ChipGroup chipGroup;
+    private ImageView imageView;
+    boolean visible = false;
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,29 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TransitionManager.beginDelayedTransition(chipGroup);
+                visible = !visible;
+                chipGroup.setVisibility(visible ? View.VISIBLE: View.GONE);
+            }
+        });
+
+        CompoundButton.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(buttonView.isChecked()){
+                    mAdapter.getFilterChip().filter(buttonView.getText().toString());
+                }else{
+                    mAdapter.getFilterChip().filter("");
+                }
+            }
+        };
+
+        hotelChip.setOnCheckedChangeListener(checkedChangeListener);
+        resturantChip.setOnCheckedChangeListener(checkedChangeListener);
 
         // popup menu pour le logout
         popupMenu();
@@ -141,6 +170,10 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         searchView = findViewById(R.id.searchView);
         popupImage = findViewById(R.id.dotsMenu);
+        hotelChip = findViewById(R.id.hotelChip) ;
+        resturantChip = findViewById(R.id.resturantChip);
+        chipGroup = findViewById(R.id.chipgroup);
+        imageView = findViewById(R.id.imageView);
     }
 
     private void popupMenu() {
