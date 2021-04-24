@@ -5,41 +5,15 @@ import java.io.Serializable;
 public class AppReviewItemModel {
     public String comment;
     public String username;
-    private int userReviewRatings = 0;
-    private String userReviewDate = null;
-    private int userPicture = 0;
+    public float rating;
+    public String date;
 
     public AppReviewItemModel(){};
-    public AppReviewItemModel(String userName, String userReview, int userReviewRatings, String userReviewDate) {
+    public AppReviewItemModel(String userName, String userReview, float rating, String date) {
         this.username = userName;
         this.comment = userReview;
-        this.userReviewRatings = userReviewRatings;
-        this.userReviewDate = userReviewDate;
-
+        this.rating = rating;
+        this.date = date;
     }
 
-
-    public int getUserReviewRatings() {
-        return userReviewRatings;
-    }
-
-    public void setUserReviewRatings(int userReviewRatings) {
-        this.userReviewRatings = userReviewRatings;
-    }
-
-    public String getUserReviewDate() {
-        return userReviewDate;
-    }
-
-    public void setUserReviewDate(String userReviewDate) {
-        this.userReviewDate = userReviewDate;
-    }
-
-    public int getUserPicture() {
-        return userPicture;
-    }
-
-    public void setUserPicture(int userPicture) {
-        this.userPicture = userPicture;
-    }
 }

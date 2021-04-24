@@ -32,67 +32,36 @@ import com.google.android.gms.tasks.Task;
 import com.iao.android.rabatcityapp.models.Hotel;
 
 public class ThirdActivity extends AppCompatActivity {
-    ImageView down_arrow, headerImage;
+    ImageView down_arrow, headerImage, reviews;
     ScrollView third_scrollview;
     Animation from_bottom;
-    TextView thirdTitle, thirdRatingNumber,aboutText;
+    TextView thirdTitle, thirdRatingNumber,aboutText, adresseText, venue_type_text;
     RatingBar thirdRattingbar;
     Intent i,mapIntent;
     Hotel hotel;
     Button roadmap_button;
     FusedLocationProviderClient client;
-    SupportMapFragment mapFragment;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third);
+        // initialisation des composants graphiques
+        initUI();
+        // initialisation du module depuis l'intent qui vient depuis l'activité 2
+        apiModelInit();
+        // initialisation des listenners
+        listennersInit();
+        // initialisation des animations
+        animationInit();
 
+    }
 
-        headerImage = findViewById(R.id.header_background);
-        thirdTitle = findViewById(R.id.third_title);
-        thirdRatingNumber = findViewById(R.id.third_rating_number);
-        thirdRattingbar = findViewById(R.id.third_ratingbar);
-        aboutText = findViewById(R.id.about_text);
-        down_arrow = findViewById(R.id.down_arrow);
-        third_scrollview = findViewById(R.id.third_scrillview);
-
-        i = getIntent();
-        hotel = (Hotel) i.getSerializableExtra("hotelActi3");
-
-        thirdTitle.setText(hotel.getName());
-        thirdRatingNumber.setText(String.valueOf(hotel.getStarRating()));
-        thirdRattingbar.setRating(hotel.getStarRating());
-        aboutText.setText(hotel.getAbout());
-        Glide.with(headerImage.getContext())
-                .load(hotel.getPhotos().get(0))
-                .centerCrop()
-                .placeholder(R.drawable.header_background)
-                .into(headerImage);
-
-        roadmap_button = findViewById(R.id.roadmap_button);
-        client = LocationServices.getFusedLocationProviderClient(this);
-        //Check permission
-        roadmap_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mapLocation();
-            }
-        });
+    private void animationInit() {
         from_bottom = AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom);
         down_arrow.setAnimation(from_bottom);
         third_scrollview.setAnimation(from_bottom);
-
-        // more comments
-        ImageView reviews = findViewById(R.id.second_arrow_upblack);
-        reviews.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ThirdActivity.this, ReviewActivity.class);
-                startActivity(intent);
-            }
-        });
         //Hide status bar and navigation bar at the bottom
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
@@ -106,6 +75,26 @@ public class ThirdActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         );
+    }
+
+    private void listennersInit() {
+        roadmap_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapLocation();
+            }
+        });
+
+
+        reviews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ThirdActivity.this, ReviewActivity.class);
+                intent.putExtra("hotel",hotel);
+                startActivity(intent);
+            }
+        });
+
         down_arrow.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -118,6 +107,36 @@ public class ThirdActivity extends AppCompatActivity {
                 startActivity(intent, options.toBundle());
             }
         });
+    }
+
+    private void apiModelInit() {
+        i = getIntent();
+        hotel = (Hotel) i.getSerializableExtra("hotelActi3");
+        thirdTitle.setText(hotel.getName());
+        thirdRatingNumber.setText(String.valueOf(hotel.getStarRating()));
+        adresseText.setText(hotel.getAddress());
+        venue_type_text.setText(hotel.getType());
+        thirdRattingbar.setRating(hotel.getStarRating());
+        aboutText.setText(hotel.getAbout());
+        Glide.with(headerImage.getContext())
+                .load(hotel.getPhotos().get(0))
+                .centerCrop()
+                .placeholder(R.drawable.header_background)
+                .into(headerImage);
+    }
+
+    private void initUI() {
+        headerImage = findViewById(R.id.header_background);
+        thirdTitle = findViewById(R.id.third_title);
+        thirdRatingNumber = findViewById(R.id.third_rating_number);
+        thirdRattingbar = findViewById(R.id.third_ratingbar);
+        aboutText = findViewById(R.id.about_text);
+        down_arrow = findViewById(R.id.down_arrow);
+        third_scrollview = findViewById(R.id.third_scrillview);
+        adresseText = findViewById(R.id.adresse_text);
+        roadmap_button = findViewById(R.id.roadmap_button);
+        reviews = findViewById(R.id.second_arrow_upblack);
+        client = LocationServices.getFusedLocationProviderClient(this);
     }
 
     @Override

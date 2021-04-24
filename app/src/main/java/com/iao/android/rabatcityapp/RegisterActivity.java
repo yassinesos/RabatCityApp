@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -39,19 +38,27 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        //init UI
+        setupUI();
+        // init Listeners
+        setupListeners();
+    }
 
-        user = findViewById(R.id.user);
-        email = findViewById(R.id.email2);
-        password = findViewById(R.id.password2);
-        passwordConfirmation = findViewById(R.id.confirm_password2);
-        register = findViewById(R.id.sign_up);
-
+    private void setupListeners() {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkDataEntered();
             }
         });
+    }
+
+    private void setupUI() {
+        user = findViewById(R.id.user);
+        email = findViewById(R.id.email2);
+        password = findViewById(R.id.password2);
+        passwordConfirmation = findViewById(R.id.confirm_password2);
+        register = findViewById(R.id.sign_up);
     }
 
     boolean isEmail(EditText text) {

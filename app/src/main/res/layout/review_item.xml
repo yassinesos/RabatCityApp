@@ -34,20 +34,6 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
 
-            <ImageView
-                android:id="@+id/iv_more_options"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_down_arrow" />
-
-            <ImageView
-                android:id="@+id/iv_like_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/iv_more_options"
-                android:src="@drawable/ic_back_arrow" />
         </RelativeLayout>
 
 
@@ -58,12 +44,18 @@
             android:layout_marginTop="3dp">
 
             <RatingBar
-                android:id="@+id/rb_user_review"
+                android:id="@+id/ratingBarReview"
+                style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="90dp"
                 android:layout_height="match_parent"
+                android:layout_marginStart="12dp"
                 android:layout_centerVertical="true"
+                android:max="5"
+                android:numStars="5"
+                android:progressTint="@color/colorAccent"
                 android:rating="4.5"
-                android:stepSize="0.5" />
+                android:stepSize="0.5"
+                 />
 
             <TextView
                 android:id="@+id/tv_user_review_date"
@@ -71,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
-                android:layout_toEndOf="@id/rb_user_review"
+                android:layout_toEndOf="@id/ratingBarReview"
                 android:text="sample_date"
                 android:textSize="12sp" />
 

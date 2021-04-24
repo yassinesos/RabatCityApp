@@ -14,17 +14,21 @@
     />
     <Button
         android:id="@+id/directions_button"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/custom_button"
         android:drawableEnd="@drawable/ic_directions"
         android:drawableRight="@drawable/ic_directions"
         android:fontFamily="@font/open_sans_extra_bold"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="N A V I G A T I O N "
         android:textColor="@color/white1"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginBottom="80dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginTop="20dp"
         android:textSize="18sp" />
 </FrameLayout>

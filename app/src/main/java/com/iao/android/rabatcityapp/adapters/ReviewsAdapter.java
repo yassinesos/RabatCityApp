@@ -18,7 +18,6 @@ import java.util.ArrayList;
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.AppViewHolder>{
     private final ArrayList<AppReviewItemModel> appReviewsList;
     private final Context mContext;
-
     public ReviewsAdapter(ArrayList<AppReviewItemModel> appReviewsList, Context context) {
         this.appReviewsList = appReviewsList;
         this.mContext = context;
@@ -36,8 +35,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.AppViewH
     public void onBindViewHolder(@NonNull ReviewsAdapter.AppViewHolder holder, int position) {
         holder.userName.setText(appReviewsList.get(position).username);
         holder.userReview.setText(appReviewsList.get(position).comment);
-        holder.userReviewDate.setText(appReviewsList.get(position).getUserReviewDate());
-        holder.userReviewRating.setRating(appReviewsList.get(position).getUserReviewRatings());
+        holder.userReviewRating.setRating(appReviewsList.get(position).rating);
+        holder.userReviewDate.setText(appReviewsList.get(position).date);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.AppViewH
             userName = itemView.findViewById(R.id.tv_user_name);
             userReview = itemView.findViewById(R.id.tv_user_review);
             userReviewDate = itemView.findViewById(R.id.tv_user_review_date);
-            userReviewRating = itemView.findViewById(R.id.rb_user_review);
+            userReviewRating = itemView.findViewById(R.id.ratingBarReview);
         }
     }
 }

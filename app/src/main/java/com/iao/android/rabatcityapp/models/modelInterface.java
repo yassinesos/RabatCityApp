@@ -9,5 +9,6 @@ public interface modelInterface {
      String getAddress();
      String getPrice();
      String getAbout();
+     String getType();
      List<String> getPhotos();
 }

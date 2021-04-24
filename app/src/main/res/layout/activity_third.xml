@@ -90,6 +90,16 @@
                     android:textSize="15sp" />
             </LinearLayout>
             <TextView
+                android:id="@+id/adresse_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:alpha="0.5"
+                android:fontFamily="@font/open_sans_regular"
+                android:text=""
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp" />
+            <TextView
                 android:id="@+id/about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

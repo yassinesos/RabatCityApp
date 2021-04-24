@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.iao.android.rabatcityapp.models.Hotel;
 
 public class SecondActivity extends AppCompatActivity {
+
     ImageView second_back_arrow, second_arrow_up;
     TextView second_title, second_subtitle, second_rating_number, second_rating_number2, more_details;
     RatingBar second_ratingbar;
@@ -29,36 +30,25 @@ public class SecondActivity extends AppCompatActivity {
     ImageView imageLayout;
     Intent i;
     Hotel hotel;
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
-        second_back_arrow = findViewById(R.id.second_back_arrow);
-        second_arrow_up = findViewById(R.id.second_arrow_up);
-        second_title = findViewById(R.id.second_title);
-        second_subtitle = findViewById(R.id.second_subtitle);
-        second_rating_number = findViewById(R.id.second_rating_number);
-        second_rating_number2 = findViewById(R.id.second_rating_number2);
-        more_details = findViewById(R.id.more_details);
-        second_ratingbar = findViewById(R.id.second_ratingbar);
-        imageLayout = findViewById(R.id.imageViewSecondActivity);
+
+        // inialisation des UI
+        initUI();
         // add data received from main activity
-         i = getIntent();
-         hotel =(Hotel)i.getSerializableExtra("hotel");
+        initData();
+        // inialisation des Listeners
+        initListeners();
+        //Hide status bar and navigation bar at the bottom
+        initAnimations();
 
-        second_title.setText(hotel.getName());
-        second_subtitle.setText(hotel.getAbout());
-        second_subtitle.setMovementMethod(new ScrollingMovementMethod());
-        second_ratingbar.setRating(hotel.getStarRating());
-        second_rating_number.setText(String.valueOf(hotel.getStarRating()));
+    }
 
-        Glide.with(imageLayout.getContext())
-                .load(hotel.getPhotos().get(0))
-                .centerCrop()
-                .placeholder(R.drawable.background)
-                .into(imageLayout);
-
+    private void initListeners() {
         second_back_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,7 +56,22 @@ public class SecondActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        //Hide status bar and navigation bar at the bottom
+
+        second_arrow_up.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SecondActivity.this, ThirdActivity.class);
+                Pair[] pairs = new Pair[1];
+                pairs[0] = new Pair<View, String>(second_arrow_up, "background_image_transition");
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SecondActivity.this, pairs);
+                intent.putExtra("hotelActi3",hotel);
+                startActivity(intent, options.toBundle());
+            }
+        });
+    }
+
+    private void initAnimations() {
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
@@ -92,17 +97,34 @@ public class SecondActivity extends AppCompatActivity {
         second_rating_number2.setAnimation(from_right);
         second_arrow_up.setAnimation(from_bottom);
         more_details.setAnimation(from_bottom);
-        second_arrow_up.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SecondActivity.this, ThirdActivity.class);
-                Pair[] pairs = new Pair[1];
-                pairs[0] = new Pair<View, String>(second_arrow_up, "background_image_transition");
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SecondActivity.this, pairs);
-                intent.putExtra("hotelActi3",hotel);
-                startActivity(intent, options.toBundle());
-            }
-        });
+    }
+
+    private void initData() {
+        i = getIntent();
+        hotel =(Hotel)i.getSerializableExtra("hotel");
+
+        second_title.setText(hotel.getName());
+        second_subtitle.setText(hotel.getAbout());
+        second_subtitle.setMovementMethod(new ScrollingMovementMethod());
+        second_ratingbar.setRating(hotel.getStarRating());
+        second_rating_number.setText(String.valueOf(hotel.getStarRating()));
+
+        Glide.with(imageLayout.getContext())
+                .load(hotel.getPhotos().get(0))
+                .centerCrop()
+                .placeholder(R.drawable.background)
+                .into(imageLayout);
+    }
+
+    private void initUI() {
+        second_back_arrow = findViewById(R.id.second_back_arrow);
+        second_arrow_up = findViewById(R.id.second_arrow_up);
+        second_title = findViewById(R.id.second_title);
+        second_subtitle = findViewById(R.id.second_subtitle);
+        second_rating_number = findViewById(R.id.second_rating_number);
+        second_rating_number2 = findViewById(R.id.second_rating_number2);
+        more_details = findViewById(R.id.more_details);
+        second_ratingbar = findViewById(R.id.second_ratingbar);
+        imageLayout = findViewById(R.id.imageViewSecondActivity);
     }
 }

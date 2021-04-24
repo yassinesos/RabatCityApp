@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.animation.Animation;
@@ -38,19 +37,26 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     RelativeLayout relativeLayout;
     CheckBox rememberme;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //init des UI
+        setupUI();
+        //init des listeners
+        setupListeners();
+    }
+
+    private void setupUI() {
         email=(EditText) findViewById(R.id.email_sign_up);
         password=(EditText) findViewById(R.id.password_sign_up);
         register = (TextView) findViewById(R.id.gotoregister);
         login = (Button) findViewById(R.id.sign_in);
         background = findViewById(R.id.loginBackground);
         rememberme = findViewById(R.id.rememberme);
-
         Glide.with(background.getContext())
                 .load(R.drawable.hassanblack)
                 .centerCrop()
@@ -59,15 +65,12 @@ public class LoginActivity extends AppCompatActivity {
         relativeLayout = findViewById(R.id.loginLayout);
         relativeLayout.setAnimation(anim_from_button);
 
-
-        setupListeners();
     }
 
     private void setupListeners() {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("signIn clicked",v.toString());
                 checkUsername();
             }
         });
